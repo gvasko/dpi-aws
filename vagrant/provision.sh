@@ -2,15 +2,20 @@
 
 echo "### Vagrant Provisioner Script"
 
-echo "### PWD:"
-pwd
+echo "### PWD:$PWD"
 
 apt-get update
+
 echo "### CURL"
 apt-get -y install curl
+
 echo "### PYTHON"
 apt-get -y install python2.7
 python --version
+
+echo "### JQ"
+apt-get -y install jq
+jq --version
 
 echo "### AWS CLI"
 curl -O https://bootstrap.pypa.io/get-pip.py

@@ -1,0 +1,8 @@
+
+#set -x
+#set -e	# Exit immediately if a command exits with a non-zero status.
+set -u	# Exit if used env var is not defined
+
+#shopt -s expand_aliases
+
+
