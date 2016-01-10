@@ -5,4 +5,7 @@ set -u	# Exit if used env var is not defined
 
 #shopt -s expand_aliases
 
+admin_variables_file="admin.variables"
+stack_variables_file="stack.variables"
+ssh_key_file="aws-ssh-keypair.pem"
 

@@ -1,0 +1,41 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "Stmt1452448921000",
+            "Effect": "Allow",
+            "Action": [
+                "ec2:CreateKeyPair",
+                "ec2:DeleteKeyPair"
+            ],
+            "Resource": [
+                "*"
+            ]
+        }
+        {
+            "Sid": "Stmt1452414678000",
+            "Effect": "Allow",
+            "Action": [
+                "s3:CreateBucket",
+                "s3:DeleteBucket",
+                "s3:DeleteBucketPolicy",
+                "s3:ListAllMyBuckets",
+                "s3:ListBucket",
+                "s3:PutBucketPolicy"
+            ],
+            "Resource": [
+                "arn:aws:s3:::*"
+            ]
+        }
+        {
+            "Sid": "Stmt1452368988000",
+            "Effect": "Allow",
+            "Action": [
+                "iam:*"
+            ],
+            "Resource": [
+                "arn:aws:iam::221820444680:user/*"
+            ]
+        }
+    ]
+}

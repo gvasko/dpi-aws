@@ -17,7 +17,13 @@ if [ "$#" -ne 0 ]; then
 	exit 1
 fi
 
-source admin.variables
+source $admin_variables_file
+
+aws --profile $admin_profile_name ec2 delete-key-pair --key-name $AWS_SSH_KEY_NAME
+if [ -f "$ssh_key_file" ]; then
+	chmod 600 $ssh_key_file
+	rm $ssh_key_file
+fi
 
 echo "Delete bucket..."
 aws --profile $admin_profile_name s3api delete-bucket --bucket $AWS_BUCKET_NAME --region $aws_region > delete-bucket.response
@@ -31,3 +37,4 @@ aws --profile $admin_profile_name iam delete-access-key --user-name $AWS_USER_NA
 echo "Delete user..."
 aws --profile $admin_profile_name iam delete-user --user-name $AWS_USER_NAME > delete-user.response
 
+# TODO: delete temp files, clean the workspace
