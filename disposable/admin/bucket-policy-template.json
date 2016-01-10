@@ -1,0 +1,26 @@
+{
+    "Version": "2012-10-17",
+    "Id": "Policy1449609534264",
+    "Statement": [
+        {
+            "Sid": "Stmt1449609529386",
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "arn:aws:iam::221820444680:user/@USER_NAME@"
+            },
+            "Action": "s3:GetObject",
+            "Action": "s3:PutObject",
+            "Action": "s3:DeleteObject",
+            "Resource": "arn:aws:s3:::@BUCKET_NAME@/*"
+        },
+        {
+            "Sid": "Stmt1449609529386",
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "arn:aws:iam::221820444680:user/@USER_NAME@"
+            },
+            "Action": "s3:ListBucket",
+            "Resource": "arn:aws:s3:::@BUCKET_NAME@"
+        }
+    ]
+}
