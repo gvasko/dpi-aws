@@ -38,7 +38,7 @@ echo "Users: $users"
 
 if [[ "$users" == *"$basename"* ]]; then
 	echo "User $basename already defined."
-#	exit 1
+	exit 1
 fi
 
 echo "Create user..."
@@ -88,7 +88,7 @@ echo "AWS_USER_SECRET_KEY=$AWS_USER_SECRET_KEY" >> $admin_variables_file
 echo "admin_profile_name=$admin_profile_name" >> $admin_variables_file
 echo "AWS_SSH_KEY_NAME=$AWS_SSH_KEY_NAME" >> $admin_variables_file
 
-echo "AWS_BASE_NAME=$basename" > $admin_variables_file
+echo "AWS_BASE_NAME=$basename" > $stack_variables_file
 echo "AWS_BUCKET_NAME=$AWS_BUCKET_NAME" >> $stack_variables_file
 echo "AWS_BUCKET_URL=https://s3.$aws_region.amazonaws.com/$AWS_BUCKET_NAME" >> $stack_variables_file
 echo "AWS_SSH_KEY_NAME=$AWS_SSH_KEY_NAME" >> $stack_variables_file

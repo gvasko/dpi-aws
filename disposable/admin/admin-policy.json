@@ -6,7 +6,7 @@
             "Action": [
                 "ec2:*",
                 "cloudformation:CreateStack",
-                "cloudformation:DeleteStack"
+                "cloudformation:DeleteStack",
                 "cloudformation:DescribeStacks"
             ],
             "Resource": "*"
