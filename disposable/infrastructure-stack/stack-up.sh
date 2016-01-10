@@ -38,11 +38,13 @@ aws cloudformation create-stack --stack-name $AWS_STACK_NAME --template-url $AWS
 echo "Waiting for the stack..."
 status=""
 while [ "X$status" != "XCREATE_COMPLETE" ]; do
-	echo "."
+	echo "status: $status"
 	sleep 3
 	aws cloudformation describe-stacks --no-paginate --stack-name $AWS_STACK_NAME > describe-stacks.response
 	status=`cat describe-stacks.response | jq -r ".Stacks[] | select(.StackName == \"$AWS_STACK_NAME\") | .StackStatus"`
 done
+
+# TODO: export can add the same lines multiple times
 
 echo "Exporting variables..."
 echo "AWS_STACK_NAME=$AWS_STACK_NAME" >> $stack_variables_file

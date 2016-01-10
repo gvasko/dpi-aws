@@ -34,7 +34,7 @@
                 "iam:*"
             ],
             "Resource": [
-                "arn:aws:iam::221820444680:user/*"
+                "arn:aws:iam::???:user/*"
             ]
         }
     ]

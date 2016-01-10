@@ -25,6 +25,9 @@ if [ -f "$ssh_key_file" ]; then
 	rm $ssh_key_file
 fi
 
+echo "Delete key pair..."
+aws --profile $admin_profile_name ec2 delete-key-pair --key-name $AWS_SSH_KEY_NAME
+
 echo "Delete bucket..."
 aws --profile $admin_profile_name s3api delete-bucket --bucket $AWS_BUCKET_NAME --region $aws_region > delete-bucket.response
 
