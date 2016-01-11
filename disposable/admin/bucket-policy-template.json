@@ -6,7 +6,7 @@
             "Sid": "Stmt1449609529386",
             "Effect": "Allow",
             "Principal": {
-                "AWS": "arn:aws:iam::221820444680:user/@USER_NAME@"
+                "AWS": "@USER_ARN@"
             },
             "Action": "s3:GetObject",
             "Action": "s3:PutObject",
@@ -17,7 +17,7 @@
             "Sid": "Stmt1449609529386",
             "Effect": "Allow",
             "Principal": {
-                "AWS": "arn:aws:iam::221820444680:user/@USER_NAME@"
+                "AWS": "@USER_ARN@"
             },
             "Action": "s3:ListBucket",
             "Resource": "arn:aws:s3:::@BUCKET_NAME@"

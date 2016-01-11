@@ -44,6 +44,12 @@ fi
 echo "Create user..."
 aws --profile $admin_profile_name iam create-user --user-name $AWS_USER_NAME > create-user.response
 
+AWS_USER_ID=$(cat create-user.response | jq -r '.User.UserId')
+AWS_USER_ARN=$(cat create-user.response | jq -r '.User.Arn')
+
+echo "Wait for the user..."
+aws --profile $admin_profile_name iam wait user-exists --user-name $AWS_USER_NAME
+
 echo "Create access key..."
 aws --profile $admin_profile_name iam create-access-key --user-name $AWS_USER_NAME > create-access-key.response
 
@@ -54,13 +60,13 @@ echo "Create bucket..."
 aws --profile $admin_profile_name s3api create-bucket --bucket $AWS_BUCKET_NAME --region $aws_region --create-bucket-configuration LocationConstraint=$aws_region > create-bucket.response
 
 echo "Instantiating the template..."
-json_user_name_token="@USER_NAME@"
+json_user_arn_token="@USER_ARN@"
 json_bucket_name_token="@BUCKET_NAME@"
 
 bucket_policy_file="bucket-policy.json"
 cp $scriptdir/bucket-policy-template.json $bucket_policy_file
-sed -i "s/$json_user_name_token/$basename/g" $bucket_policy_file
-sed -i "s/$json_bucket_name_token/$basename/g" $bucket_policy_file
+sed -i "s|$json_user_arn_token|$AWS_USER_ARN|g" $bucket_policy_file
+sed -i "s|$json_bucket_name_token|$AWS_BUCKET_NAME|g" $bucket_policy_file
 
 echo "Set bucket policy..."
 aws --profile $admin_profile_name s3api put-bucket-policy --bucket $AWS_BUCKET_NAME --policy "file://$bucket_policy_file" --region $aws_region | tee put-bucket-policy.response
@@ -79,8 +85,8 @@ echo "AWS_BASE_NAME=$basename" > $admin_variables_file
 echo "AWS_USER_NAME=$AWS_USER_NAME" >> $admin_variables_file
 echo "AWS_BUCKET_NAME=$AWS_BUCKET_NAME" >> $admin_variables_file
 echo "AWS_USER_POLICY_NAME=$AWS_USER_POLICY_NAME" >> $admin_variables_file
-AWS_USER_ID=$(cat create-user.response | jq -r '.User.UserId')
 echo "AWS_USER_ID=$AWS_USER_ID" >> $admin_variables_file
+echo "AWS_USER_ARN=$AWS_USER_ARN" >> $admin_variables_file
 AWS_ACCESS_KEY_ID=$(cat create-access-key.response | jq -r '.AccessKey.AccessKeyId')
 echo "AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID" >> $admin_variables_file
 AWS_USER_SECRET_KEY=$(cat create-access-key.response | jq -r '.AccessKey.SecretAccessKey')
