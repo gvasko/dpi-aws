@@ -9,3 +9,28 @@ admin_variables_file="admin.variables"
 stack_variables_file="stack.variables"
 ssh_key_file="aws-ssh-keypair.pem"
 
+function exit_on_non_zero_status {
+	set -e	
+}
+
+function continue_on_non_zero_status {
+	set -e	
+}
+
+function validate_json {
+	local valid=0	# 0 = true
+	local dir=$1
+	
+	echo "Validating json files in $dir"
+	
+	for json in $(find "$dir" -type f -name "*.json"); do
+		echo "Validate $json ..."
+		cat $json | jq '.' > /dev/null
+		if [ $? -ne 0 ]; then
+			valid=1
+		fi
+	done
+
+	return $valid
+}
+

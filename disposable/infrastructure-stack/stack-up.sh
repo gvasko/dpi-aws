@@ -16,6 +16,13 @@ if [ "$#" -ne 0 ]; then
 	exit 1
 fi
 
+if ! validate_json $scriptdir ; then
+	echo "ERROR: invalid json file, see above."
+	exit 1
+fi
+
+exit 2
+
 source $stack_variables_file
 
 stack_template_file="infrastructure-stack.json"
@@ -29,11 +36,10 @@ aws s3 cp "$localfile" "$s3file"
 
 AWS_STACK_NAME=${AWS_BASE_NAME//./-}
 
-# TODO: separate file
-JENKINS_MTYPE="t2.micro"
+source $scriptdir/stack.variables
 
 echo "Create stack..."
-aws cloudformation create-stack --stack-name $AWS_STACK_NAME --template-url $AWS_BUCKET_URL/$stack_template_file --parameters ParameterKey=InstanceType,ParameterValue=$JENKINS_MTYPE ParameterKey=KeyName,ParameterValue=$AWS_SSH_KEY_NAME | tee create-stack.response
+aws cloudformation create-stack --stack-name $AWS_STACK_NAME --template-url $AWS_BUCKET_URL/$stack_template_file --parameters ParameterKey=InstanceType,ParameterValue=$BUILD_SERVER_MTYPE ParameterKey=KeyName,ParameterValue=$AWS_SSH_KEY_NAME | tee create-stack.response
 
 echo "Waiting for the stack..."
 status=""

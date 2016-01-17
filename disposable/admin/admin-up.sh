@@ -18,6 +18,11 @@ if [ "$#" -ne 2 ]; then
 	exit 1
 fi
 
+if ! validate_json $scriptdir ; then
+	echo "ERROR: invalid json file, see above."
+	exit 1
+fi
+
 name_postfix="$1"
 admin_profile_name="$2"
 
