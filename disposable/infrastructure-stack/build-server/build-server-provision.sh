@@ -1,3 +1,12 @@
+#!/bin/bash
+
+# Set scriptdir
+if [ "x${0:0:1}" = 'x/' ]; then
+	scriptdir=`dirname "$0"`
+else
+	scriptdir=`dirname "$PWD/$0"`
+fi
+
 wget -q -O - https://jenkins-ci.org/debian/jenkins-ci.org.key | apt-key add -
 sh -c 'echo deb http://pkg.jenkins-ci.org/debian binary/ > /etc/apt/sources.list.d/jenkins.list'
 apt-get update
@@ -7,7 +16,7 @@ apt-get install -y jenkins
 apt-get install -y nginx
 rm /etc/nginx/sites-available/default
 rm /etc/nginx/sites-enabled/default
-cp /vagrant/nginx.config /etc/nginx/sites-available/jenkins
+cp $scriptdir/nginx.config /etc/nginx/sites-available/jenkins
 ln -s /etc/nginx/sites-available/jenkins /etc/nginx/sites-enabled/
 mkdir /var/log/nginx/jenkins
 service nginx restart

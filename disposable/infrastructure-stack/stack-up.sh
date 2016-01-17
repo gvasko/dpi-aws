@@ -22,6 +22,7 @@ if ! validate_json $scriptdir ; then
 fi
 
 source $stack_variables_file
+source $scriptdir/stack.variables
 
 stack_template_file="infrastructure-stack.json"
 
@@ -34,7 +35,6 @@ aws s3 cp "$localfile" "$s3file"
 
 AWS_STACK_NAME=${AWS_BASE_NAME//./-}
 
-source $scriptdir/stack.variables
 
 echo "Create stack..."
 aws cloudformation create-stack --stack-name $AWS_STACK_NAME --template-url $AWS_BUCKET_URL/$stack_template_file --parameters ParameterKey=InstanceType,ParameterValue=$BUILD_SERVER_MTYPE ParameterKey=KeyName,ParameterValue=$AWS_SSH_KEY_NAME > create-stack.response
@@ -47,11 +47,12 @@ fi
 
 echo "Waiting for the stack..."
 status="just started"
+echo "status: $status"
 while [ "X$status" != "XCREATE_COMPLETE" ]; do
-	echo "status: $status"
 	sleep 3
 	aws cloudformation describe-stacks --no-paginate --stack-name $AWS_STACK_NAME > describe-stacks.response
 	status=`cat describe-stacks.response | jq -r ".Stacks[] | select(.StackName == \"$AWS_STACK_NAME\") | .StackStatus"`
+	echo "status: $status"
 	if [ "X$status" = "XROLLBACK_COMPLETE" ]; then
 		echo "status: $status, exiting"
 		break
@@ -69,3 +70,4 @@ if [ "X$status" = "XCREATE_COMPLETE" ]; then
 fi
 echo "AWS_STACK_STATUS=$status" >> $stack_variables_file
 
+$scriptdir/provision-build-server.sh
