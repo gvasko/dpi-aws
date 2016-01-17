@@ -16,3 +16,5 @@ jenkins_args=$(cat /etc/default/jenkins | grep JENKINS_ARGS | sed -e 's:\"$: --p
 cat /etc/default/jenkins | grep -v JENKINS_ARGS > /etc/default/jenkins.new
 echo $jenkins_args >> /etc/default/jenkins.new
 mv /etc/default/jenkins.new /etc/default/jenkins
+
+service jenkins restart
