@@ -22,6 +22,7 @@ echo "Empty bucket..."
 aws s3 rm s3://$AWS_BUCKET_NAME --recursive
 
 echo "Delete stack..."
+echo "AWS_STACK_STATUS=$AWS_STACK_STATUS"
 aws cloudformation delete-stack --stack-name $AWS_STACK_NAME | tee delete-stack.response
 
 echo "Please note that deletion is in progress. Status can be check with:"

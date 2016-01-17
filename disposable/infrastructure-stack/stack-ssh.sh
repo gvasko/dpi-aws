@@ -17,5 +17,6 @@ if [ "$#" -ne 0 ]; then
 fi
 
 source $stack_variables_file
+source $scriptdir/stack.variables
 
-ssh -i $ssh_key_file ec2-user@$AWS_STACK_PUBLIC_DNS
+ssh -i $ssh_key_file $SSH_USER_NAME@$AWS_STACK_PUBLIC_DNS

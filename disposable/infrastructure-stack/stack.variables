@@ -1,1 +1,2 @@
-BUILD_SERVER_MTYPE="t2.micro"
+BUILD_SERVER_MTYPE="m3.medium"
+SSH_USER_NAME="ubuntu"

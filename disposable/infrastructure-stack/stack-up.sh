@@ -21,8 +21,6 @@ if ! validate_json $scriptdir ; then
 	exit 1
 fi
 
-exit 2
-
 source $stack_variables_file
 
 stack_template_file="infrastructure-stack.json"
@@ -39,22 +37,35 @@ AWS_STACK_NAME=${AWS_BASE_NAME//./-}
 source $scriptdir/stack.variables
 
 echo "Create stack..."
-aws cloudformation create-stack --stack-name $AWS_STACK_NAME --template-url $AWS_BUCKET_URL/$stack_template_file --parameters ParameterKey=InstanceType,ParameterValue=$BUILD_SERVER_MTYPE ParameterKey=KeyName,ParameterValue=$AWS_SSH_KEY_NAME | tee create-stack.response
+aws cloudformation create-stack --stack-name $AWS_STACK_NAME --template-url $AWS_BUCKET_URL/$stack_template_file --parameters ParameterKey=InstanceType,ParameterValue=$BUILD_SERVER_MTYPE ParameterKey=KeyName,ParameterValue=$AWS_SSH_KEY_NAME > create-stack.response
+
+if [ $? -ne 0 ]; then
+	echo "ERROR: stack creation failed. See the log above."
+	echo "No destroy necessary."
+	exit 1
+fi
 
 echo "Waiting for the stack..."
-status=""
+status="just started"
 while [ "X$status" != "XCREATE_COMPLETE" ]; do
 	echo "status: $status"
 	sleep 3
 	aws cloudformation describe-stacks --no-paginate --stack-name $AWS_STACK_NAME > describe-stacks.response
 	status=`cat describe-stacks.response | jq -r ".Stacks[] | select(.StackName == \"$AWS_STACK_NAME\") | .StackStatus"`
+	if [ "X$status" = "XROLLBACK_COMPLETE" ]; then
+		echo "status: $status, exiting"
+		break
+	fi
 done
 
 # TODO: export can add the same lines multiple times
 
 echo "Exporting variables..."
 echo "AWS_STACK_NAME=$AWS_STACK_NAME" >> $stack_variables_file
-echo "AWS_STACK_ID=$(cat create-stack.response | jq -r '.StackId')" >> $stack_variables_file
-public_dns=`cat describe-stacks.response | jq -r ".Stacks[] | select(.StackName == \"$AWS_STACK_NAME\") | .Outputs[] | select(.OutputKey == \"PublicDNS\") | .OutputValue"`
-echo "AWS_STACK_PUBLIC_DNS=$public_dns" >> $stack_variables_file
+if [ "X$status" = "XCREATE_COMPLETE" ]; then
+	echo "AWS_STACK_ID=$(cat create-stack.response | jq -r '.StackId')" >> $stack_variables_file
+	public_dns=`cat describe-stacks.response | jq -r ".Stacks[] | select(.StackName == \"$AWS_STACK_NAME\") | .Outputs[] | select(.OutputKey == \"PublicDNS\") | .OutputValue"`
+	echo "AWS_STACK_PUBLIC_DNS=$public_dns" >> $stack_variables_file
+fi
+echo "AWS_STACK_STATUS=$status" >> $stack_variables_file
 

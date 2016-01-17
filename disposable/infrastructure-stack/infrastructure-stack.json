@@ -1,7 +1,7 @@
 {
   "AWSTemplateFormatVersion" : "2010-09-09",
 
-  "Description" : "...",
+  "Description" : "Simple build server with Jenkins",
 
   "Parameters" : {
     "KeyName": {
@@ -13,8 +13,8 @@
     "InstanceType" : {
       "Description" : "WebServer EC2 instance type",
       "Type" : "String",
-      "Default" : "t2.micro",
-      "AllowedValues" : [ "t2.micro", "t2.small", "t2.medium" ],
+      "Default" : "m3.medium",
+      "AllowedValues" : [ "m3.medium" ],
       "ConstraintDescription" : "must be a valid EC2 instance type."
     }
 
@@ -22,15 +22,11 @@
 
   "Mappings" : {
     "AWSInstanceType2Arch" : {
-      "t2.micro"    : { "Arch" : "HVM64"  },
-      "t2.small"    : { "Arch" : "HVM64"  },
-      "t2.medium"   : { "Arch" : "HVM64"  }
+      "m3.medium"    : { "Arch" : "HVM64"  }
     },
 
     "AWSInstanceType2NATArch" : {
-      "t2.micro"    : { "Arch" : "NATHVM64"  },
-      "t2.small"    : { "Arch" : "NATHVM64"  },
-      "t2.medium"   : { "Arch" : "NATHVM64"  }
+      "m3.medium"    : { "Arch" : "NATHVM64"  }
     },
 	
     "AWSRegionArch2AMI" : {
