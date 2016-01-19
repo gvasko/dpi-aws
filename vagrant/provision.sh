@@ -23,3 +23,8 @@ python get-pip.py
 which pip
 pip install awscli
 aws --version
+
+echo "alias dpi='/vagrant/main.sh'" >> /home/vagrant/.bashrc
+echo "Aliases added."
+
+echo -e "\nPLEASE SET UP AN AWS ADMIN USER FIRST\nFor example: \"aws configure --profile dpi-admin\"\n"

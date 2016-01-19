@@ -14,7 +14,7 @@ source $scriptdir/../../dpi.variables
 
 if [ "$#" -ne 2 ]; then
 	echo "Error in arguments."
-	echo "Usage: $0 <name_postfix> <admin_profile_name>"
+	echo "Arguments: <name_postfix> <admin_profile_name>"
 	exit 1
 fi
 
