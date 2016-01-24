@@ -19,6 +19,8 @@ apt-get update
 apt-get install -y openjdk-7-jdk
 apt-get install -y jenkins
 
+service jenkins stop
+
 apt-get install -y nginx
 rm /etc/nginx/sites-available/default
 rm /etc/nginx/sites-enabled/default
@@ -32,4 +34,8 @@ cat /etc/default/jenkins | grep -v JENKINS_ARGS > /etc/default/jenkins.new
 echo $jenkins_args >> /etc/default/jenkins.new
 mv /etc/default/jenkins.new /etc/default/jenkins
 
-service jenkins restart
+apt-get install -y curl
+apt-get install -y unzip
+$scriptdir/jenkins-plugins.sh $scriptdir/jenkins-plugins.txt
+
+service jenkins start
