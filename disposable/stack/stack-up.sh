@@ -24,7 +24,7 @@ fi
 source $stack_variables_file
 source $scriptdir/stack.variables
 
-stack_template_file="infrastructure-stack.json"
+stack_template_file="stack.json"
 
 echo "Init stack tamplate..."
 localfile="$scriptdir/$stack_template_file"
@@ -70,4 +70,4 @@ if [ "X$status" = "XCREATE_COMPLETE" ]; then
 fi
 echo "AWS_STACK_STATUS=$status" >> $stack_variables_file
 
-$scriptdir/provision-build-server.sh
+$scriptdir/stack-provision.sh
