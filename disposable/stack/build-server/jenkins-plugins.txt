@@ -16,6 +16,7 @@ copyartifact:latest
 credentials-binding:latest
 credentials:latest
 custom-view-tabs:latest
+cvs:latest
 delivery-pipeline-plugin:latest
 depgraph-view:latest
 description-setter:latest
@@ -44,6 +45,7 @@ matrix-auth:latest
 matrix-project:latest
 maven-plugin:latest
 modernstatus:latest
+nested-view:latest
 next-build-number:latest
 nunit:latest
 pam-auth:latest
@@ -60,9 +62,11 @@ script-security:latest
 simple-theme-plugin:latest
 ssh-credentials:latest
 ssh-slaves:latest
+subversion:latest
 timestamper:latest
 token-macro:latest
 translation:latest
 view-job-filters:latest
+windows-slaves:latest
 workflow-step-api:latest
 ws-cleanup:latest
