@@ -36,7 +36,18 @@
   },
 
   "Resources" : {
-    "EC2Instance" : {
+    "BuildServer" : {
+      "Type" : "AWS::EC2::Instance",
+      "Properties" : {
+        "InstanceType" : { "Ref" : "InstanceType" },
+        "SecurityGroups" : [ { "Ref" : "InstanceSecurityGroup" } ],
+        "KeyName" : { "Ref" : "KeyName" },
+        "ImageId" : { "Fn::FindInMap" : [ "AWSRegionArch2AMI", { "Ref" : "AWS::Region" },
+                          { "Fn::FindInMap" : [ "AWSInstanceType2Arch", { "Ref" : "InstanceType" }, "Arch" ] } ] }
+      }
+    },
+
+    "BuildNode01" : {
       "Type" : "AWS::EC2::Instance",
       "Properties" : {
         "InstanceType" : { "Ref" : "InstanceType" },
@@ -70,21 +81,38 @@
   },
 
   "Outputs" : {
-    "InstanceId" : {
-      "Description" : "InstanceId of the newly created EC2 instance",
-      "Value" : { "Ref" : "EC2Instance" }
+    "BuildServerInstanceId" : {
+      "Description" : "InstanceId of the BuildServer",
+      "Value" : { "Ref" : "BuildServer" }
     },
-    "AZ" : {
-      "Description" : "Availability Zone of the newly created EC2 instance",
-      "Value" : { "Fn::GetAtt" : [ "EC2Instance", "AvailabilityZone" ] }
+    "BuildServerAZ" : {
+      "Description" : "Availability Zone of the BuildServer",
+      "Value" : { "Fn::GetAtt" : [ "BuildServer", "AvailabilityZone" ] }
     },
-    "PublicDNS" : {
-      "Description" : "Public DNSName of the newly created EC2 instance",
-      "Value" : { "Fn::GetAtt" : [ "EC2Instance", "PublicDnsName" ] }
+    "BuildServerPublicDNS" : {
+      "Description" : "Public DNSName of the BuildServer",
+      "Value" : { "Fn::GetAtt" : [ "BuildServer", "PublicDnsName" ] }
     },
-    "PublicIP" : {
-      "Description" : "Public IP address of the newly created EC2 instance",
-      "Value" : { "Fn::GetAtt" : [ "EC2Instance", "PublicIp" ] }
+    "BuildServerPublicIP" : {
+      "Description" : "Public IP address of the BuildServer",
+      "Value" : { "Fn::GetAtt" : [ "BuildServer", "PublicIp" ] }
+    },
+
+    "BuildNode01InstanceId" : {
+      "Description" : "InstanceId of the BuildNode01",
+      "Value" : { "Ref" : "BuildNode01" }
+    },
+    "BuildNode01AZ" : {
+      "Description" : "Availability Zone of the BuildNode01",
+      "Value" : { "Fn::GetAtt" : [ "BuildNode01", "AvailabilityZone" ] }
+    },
+    "BuildNode01PublicDNS" : {
+      "Description" : "Public DNSName of the BuildNode01",
+      "Value" : { "Fn::GetAtt" : [ "BuildNode01", "PublicDnsName" ] }
+    },
+    "BuildNode01PublicIP" : {
+      "Description" : "Public IP address of the BuildNode01",
+      "Value" : { "Fn::GetAtt" : [ "BuildNode01", "PublicIp" ] }
     }
   }
 }

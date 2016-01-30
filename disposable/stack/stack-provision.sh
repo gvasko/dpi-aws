@@ -20,9 +20,14 @@ source $stack_variables_file
 source $scriptdir/stack.variables
 
 echo "Provisioning the build server..."
-ssh-keyscan -H $AWS_STACK_PUBLIC_DNS >> ~/.ssh/known_hosts
-scp -i $ssh_key_file -rp "$scriptdir/build-server" $SSH_USER_NAME@$AWS_STACK_PUBLIC_DNS:~
-ssh -i $ssh_key_file $SSH_USER_NAME@$AWS_STACK_PUBLIC_DNS "sudo ~/build-server/build-server-provision.sh"
+ssh-keyscan -H $BUILD_SERVER_PUBLIC_DNS >> ~/.ssh/known_hosts
+scp -i $ssh_key_file -rp "$scriptdir/build-server" $SSH_USER_NAME@$BUILD_SERVER_PUBLIC_DNS:~
+ssh -i $ssh_key_file $SSH_USER_NAME@$BUILD_SERVER_PUBLIC_DNS "sudo ~/build-server/build-server-provision.sh"
+
+echo "Provisioning the build node01 ..."
+ssh-keyscan -H $BUILD_NODE01_PUBLIC_DNS >> ~/.ssh/known_hosts
+scp -i $ssh_key_file -rp "$scriptdir/build-node-java" $SSH_USER_NAME@$BUILD_NODE01_PUBLIC_DNS:~
+ssh -i $ssh_key_file $SSH_USER_NAME@$BUILD_NODE01_PUBLIC_DNS "sudo ~/build-node-java/build-node-provision.sh"
 
 echo "Jenkins is available at:"
-echo "http://$AWS_STACK_PUBLIC_DNS/jenkins"
+echo "http://$BUILD_SERVER_PUBLIC_DNS/jenkins"
