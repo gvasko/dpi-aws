@@ -15,6 +15,9 @@ echo "scriptdir=$scriptdir"
 
 system_profile="/etc/profile.d/vagrant.sh"
 
+#echo "export JENKINS_HOME=/var/jenkins/" >> $system_profile
+
+
 add-apt-repository -y ppa:openjdk-r/ppa
 apt-add-repository -y ppa:natecarlson/maven3
 apt-get update
@@ -22,7 +25,9 @@ apt-get install -y wget
 apt-get install -y unzip
 apt-get install -y openjdk-8-jdk
 
-echo "export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-i386/" >> $system_profile
+arch=$(dpkg --print-architecture)
+
+echo "export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-$arch/" >> $system_profile
 
 #apt-get install -y maven3
 
