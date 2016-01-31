@@ -6,9 +6,6 @@ echo "### PWD:$PWD"
 
 apt-get update
 
-echo "### PWGEN"
-apt-get -y install pwgen
-
 echo "### CURL"
 apt-get -y install curl
 
@@ -26,6 +23,9 @@ python get-pip.py
 which pip
 pip install awscli
 aws --version
+
+echo "### PWGEN"
+apt-get -y install pwgen
 
 echo "alias dpi='/vagrant/main.sh'" >> /home/vagrant/.bashrc
 echo "Aliases added."

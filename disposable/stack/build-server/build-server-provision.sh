@@ -13,8 +13,14 @@ fi
 
 echo "scriptdir=$scriptdir"
 
-node_variables_file="$scriptdir/node.variables"
-system_profile="/etc/bash.bashrc"
+system_profile="/etc/profile"
+
+if [ -f "$scriptdir/node.variables" ]; then
+	node_variables_file="$scriptdir/node.variables"
+else
+	echo "WARNING: node.variables not found, using vagrant-node.variables"
+	node_variables_file="$scriptdir/vagrant-node.variables"
+fi
 
 wget -q -O - https://jenkins-ci.org/debian/jenkins-ci.org.key | apt-key add -
 sh -c 'echo deb http://pkg.jenkins-ci.org/debian binary/ > /etc/apt/sources.list.d/jenkins.list'
@@ -41,7 +47,9 @@ apt-get install -y unzip
 $scriptdir/jenkins-plugins.sh $scriptdir/jenkins-plugins.txt
 chown -R jenkins:jenkins $jenkins_home/plugins
 
+mkdir -p $jenkins_init_dir
 cp $scriptdir/credentials.groovy $jenkins_init_dir/
 cp $node_variables_file $jenkins_init_dir/
+chown -R jenkins:jenkins $jenkins_init_dir
 
 service jenkins restart

@@ -13,8 +13,14 @@ fi
 
 echo "scriptdir=$scriptdir"
 
-node_variables_file="$scriptdir/node.variables"
-system_profile="/etc/bash.bashrc"
+system_profile="/etc/profile"
+
+if [ -f "$scriptdir/node.variables" ]; then
+	node_variables_file="$scriptdir/node.variables"
+else
+	echo "WARNING: node.variables not found, using vagrant-node.variables"
+	node_variables_file="$scriptdir/vagrant-node.variables"
+fi
 
 source $node_variables_file
 
@@ -33,6 +39,13 @@ echo "$BUILD_NODE_USER:$BUILD_NODE_PASSWORD" | chpasswd
 mkdir -p $jenkins_home
 chown jenkins $jenkins_home
 echo "export JENKINS_HOME=$jenkins_home/" >> $system_profile
+
+grep -v PasswordAuthentication /etc/ssh/sshd_config >> sshd_config
+echo "PasswordAuthentication yes" >> sshd_config
+cp sshd_config /etc/ssh/sshd_config
+chown root:root /etc/ssh/sshd_config
+restart ssh
+
 
 echo "# Install java"
 apt-get install -y openjdk-8-jdk

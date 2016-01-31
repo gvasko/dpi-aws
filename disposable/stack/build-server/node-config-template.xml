@@ -1,19 +1,19 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <slave>
-  <name>BuildNodeJava</name>
+  <name>@NAME@</name>
   <description></description>
   <remoteFS>/var/jenkins</remoteFS>
   <numExecutors>1</numExecutors>
   <mode>NORMAL</mode>
   <retentionStrategy class="hudson.slaves.RetentionStrategy$Always"/>
   <launcher class="hudson.plugins.sshslaves.SSHLauncher" plugin="ssh-slaves@1.10">
-    <host>ec2-52-28-197-48.eu-central-1.compute.amazonaws.com</host>
+    <host>@HOST@</host>
     <port>22</port>
-    <credentialsId>8bd0ada0-ab02-4678-9c20-9d4d63bb059a</credentialsId>
+    <credentialsId>@CREDENTIALS_ID@</credentialsId>
     <maxNumRetries>0</maxNumRetries>
     <retryWaitTime>0</retryWaitTime>
   </launcher>
-  <label></label>
+  <label>@LABEL@</label>
   <nodeProperties/>
   <userId>anonymous</userId>
 </slave>

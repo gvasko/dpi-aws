@@ -15,16 +15,16 @@ if (!env.containsKey('JENKINS_HOME')) {
 }
 
 try {
-	def nodePropertiesFilePath = env['JENKINS_HOME'] + 'init.groovy.d/node.variables'
+	def nodePropertiesFilePath = env['JENKINS_HOME'] + '/init.groovy.d/node.variables'
 
-	Properties noderoperties = new Properties()
+	Properties nodeProperties = new Properties()
 	File nodePropertiesFile = new File(nodePropertiesFilePath)
 	nodePropertiesFile.withInputStream {
 		nodeProperties.load(it)
 	}
 
-	def paramUsername = nodeProperties.BUILD_NODE_USER
-	def paramPassword = nodeProperties.BUILD_NODE_PASSWORD
+	def paramUsername = nodeProperties.'BUILD_NODE_USER'
+	def paramPassword = nodeProperties.'BUILD_NODE_PASSWORD'
 
     def credentials_store = Jenkins.instance.getExtensionList('com.cloudbees.plugins.credentials.SystemCredentialsProvider')[0].getStore()
     def scope = CredentialsScope.GLOBAL
