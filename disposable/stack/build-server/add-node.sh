@@ -7,15 +7,21 @@ else
 	scriptdir=`dirname "$PWD/$0"`
 fi
 
-if [ $# -eq 1 ]; then
-	scriptdir="$1"
-fi
-
 echo "scriptdir=$scriptdir"
 
-!!! server: ssh add slave to known hosts
+if [ $# -ne 4 ]; then
+	echo "Argument error. Required: <name> <credentials-id> <labels> <host>"
+	exit 1
+fi
 
-node_dir="$JENKINS_HOME/nodes/$NODE_NAME"
+node_name=$1
+node_credentials=$2
+node_labels=$3
+node_url=$4
+
+ssh-keyscan -H $node_url >> ~/.ssh/known_hosts
+
+node_dir="$JENKINS_HOME/nodes/$node_name"
 
 mkdir -p $node_dir
 cp $scriptdir/node-config-template.xml $node_dir/config.xml
@@ -25,6 +31,9 @@ host_token="@HOST@"
 credentials_token="@CREDENTIALS_ID@"
 label_token="@LABEL@"
 
-!!! sed all tokens
+sed -i "s:$name_token:$node_name:" $node_dir/config.xml
+sed -i "s:$host_token:$node_url:" $node_dir/config.xml
+sed -i "s:$credentials_token:$node_credentials:" $node_dir/config.xml
+sed -i "s:$label_token:$node_labels:" $node_dir/config.xml
 
 chown -R jenkins:jenkins $node_dir

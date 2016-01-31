@@ -40,5 +40,10 @@ ssh-keyscan -H $BUILD_SERVER_PUBLIC_DNS >> ~/.ssh/known_hosts
 scp -i $ssh_key_file -rp $scriptdir/build-server $SSH_USER_NAME@$BUILD_SERVER_PUBLIC_DNS:~
 ssh -i $ssh_key_file $SSH_USER_NAME@$BUILD_SERVER_PUBLIC_DNS "sudo ~/build-server/build-server-provision.sh"
 
+echo "Adding slaves"
+# TODO: get default variables in nicely
+source $scriptdir/build-node-java/default.variables
+ssh -i $ssh_key_file $SSH_USER_NAME@$BUILD_SERVER_PUBLIC_DNS "sudo ~/build-server/add-node.sh $BUILDNODE01_NAME $DEFAULT_CREDENTIALS_ID $JENKINS_LABELS $BUILD_NODE01_PUBLIC_DNS"
+
 echo "Jenkins is available at:"
 echo "http://$BUILD_SERVER_PUBLIC_DNS/jenkins"
