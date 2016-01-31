@@ -23,7 +23,7 @@ source $scriptdir/stack.variables
 
 # Load the description of the given instance
 instance_variables_file="$1.variables"
-if [ ! -f "instance_variables_file" ]; then
+if [ ! -f "$instance_variables_file" ]; then
 	echo "Error: no config was found for the given instance name."
 	exit 1
 fi

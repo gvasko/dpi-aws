@@ -31,7 +31,6 @@ source $node_variables_file
 
 echo "# Init and install basic tools"
 add-apt-repository -y ppa:openjdk-r/ppa
-apt-add-repository -y ppa:natecarlson/maven3
 apt-get update
 apt-get install -y wget
 apt-get install -y unzip
@@ -60,7 +59,6 @@ arch=$(dpkg --print-architecture)
 echo "export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-$arch/" >> $system_profile
 
 echo "# Install maven"
-#apt-get install -y maven3
 maven_version="3.3.9"
 maven_name="apache-maven-${maven_version}"
 maven_home_parent="/var/lib"

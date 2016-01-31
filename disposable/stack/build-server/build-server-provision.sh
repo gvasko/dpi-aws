@@ -27,7 +27,7 @@ fi
 
 echo "# Set welcome message..."
 if [ ! -f "$scriptdir/motd" ]; then
-	echo "instance of build-node-java" > $scriptdir/motd
+	echo "instance of build-server" > $scriptdir/motd
 fi
 cp $scriptdir/motd /etc/
 
@@ -56,6 +56,7 @@ echo $jenkins_args >> /etc/default/jenkins.new
 mv /etc/default/jenkins.new /etc/default/jenkins
 
 jenkins_home="/var/lib/jenkins"
+echo "export JENKINS_HOME=$jenkins_home" >> $system_profile
 jenkins_init_dir="$jenkins_home/init.groovy.d"
 apt-get install -y unzip
 $scriptdir/jenkins-plugins.sh $scriptdir/jenkins-plugins.txt
