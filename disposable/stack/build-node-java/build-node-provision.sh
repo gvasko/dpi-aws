@@ -13,24 +13,36 @@ fi
 
 echo "scriptdir=$scriptdir"
 
-system_profile="/etc/profile.d/vagrant.sh"
+node_variables_file="$scriptdir/node.variables"
+system_profile="/etc/bash.bashrc"
 
-#echo "export JENKINS_HOME=/var/jenkins/" >> $system_profile
+source $node_variables_file
 
-
+echo "# Install basic tools"
 add-apt-repository -y ppa:openjdk-r/ppa
 apt-add-repository -y ppa:natecarlson/maven3
 apt-get update
 apt-get install -y wget
 apt-get install -y unzip
+
+echo "# Create user jenkins"
+
+jenkins_home="/var/$BUILD_NODE_USER"
+adduser --quiet --home $jenkins_home --disabled-password --shell /bin/bash --gecos "User" $BUILD_NODE_USER
+echo "$BUILD_NODE_USER:$BUILD_NODE_PASSWORD" | chpasswd
+mkdir -p $jenkins_home
+chown jenkins $jenkins_home
+echo "export JENKINS_HOME=$jenkins_home/" >> $system_profile
+
+echo "# Install java"
 apt-get install -y openjdk-8-jdk
 
 arch=$(dpkg --print-architecture)
 
 echo "export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-$arch/" >> $system_profile
 
+echo "# Install maven"
 #apt-get install -y maven3
-
 maven_version="3.3.9"
 maven_name="apache-maven-${maven_version}"
 maven_home_parent="/var/lib"
