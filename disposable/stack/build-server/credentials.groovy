@@ -8,20 +8,24 @@ Logger LOGGER = Logger.getLogger('jenkins.util.groovy.GroovyHookScript')
 
 def env = System.getenv()
 
-if (!env.containsKey('BUILD_NODE_USERNAME')) {
-    LOGGER.info('Credentials - BUILD_NODE_USERNAME environment variable not found')
+
+if (!env.containsKey('JENKINS_HOME')) {
+    LOGGER.info('Credentials - JENKINS_HOME environment variable not found')
     return
 }
-
-if (!env.containsKey('BUILD_NODE_PASSWORD')) {
-    LOGGER.info('Credentials - BUILD_NODE_PASSWORD environment variable not found')
-    return
-}
-
-def paramUsername = env['BUILD_NODE_USERNAME']
-def paramPassword = env['BUILD_NODE_PASSWORD']
 
 try {
+	def nodePropertiesFilePath = env['JENKINS_HOME'] + 'init.groovy.d/node.variables'
+
+	Properties noderoperties = new Properties()
+	File nodePropertiesFile = new File(nodePropertiesFilePath)
+	nodePropertiesFile.withInputStream {
+		nodeProperties.load(it)
+	}
+
+	def paramUsername = nodeProperties.BUILD_NODE_USER
+	def paramPassword = nodeProperties.BUILD_NODE_PASSWORD
+
     def credentials_store = Jenkins.instance.getExtensionList('com.cloudbees.plugins.credentials.SystemCredentialsProvider')[0].getStore()
     def scope = CredentialsScope.GLOBAL
     def credentials = new UsernamePasswordCredentialsImpl(scope, 'JENKINS_USER_ID', 'Jenkins User for the Attached Nodes', paramUsername, paramPassword)

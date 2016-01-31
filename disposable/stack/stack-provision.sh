@@ -19,15 +19,24 @@ fi
 source $stack_variables_file
 source $scriptdir/stack.variables
 
+echo "Init Jenkins user..."
+
+node_variables_file="node.variables"
+pwgen=$(pwgen -N 1)
+echo "BUILD_NODE_USER=jenkins" > $node_variables_file
+echo "BUILD_NODE_PASSWORD=$pwgen" >> $node_variables_file
+cp $node_variables_file $scriptdir/build-node-java/
+cp $node_variables_file $scriptdir/build-server/
+
+echo "Provisioning the build node01..."
+ssh-keyscan -H $BUILD_NODE01_PUBLIC_DNS >> ~/.ssh/known_hosts
+scp -i $ssh_key_file -rp "$scriptdir/build-node-java" $SSH_USER_NAME@$BUILD_NODE01_PUBLIC_DNS:~
+ssh -i $ssh_key_file $SSH_USER_NAME@$BUILD_NODE01_PUBLIC_DNS "sudo ~/build-node-java/build-node-provision.sh"
+
 echo "Provisioning the build server..."
 ssh-keyscan -H $BUILD_SERVER_PUBLIC_DNS >> ~/.ssh/known_hosts
 scp -i $ssh_key_file -rp "$scriptdir/build-server" $SSH_USER_NAME@$BUILD_SERVER_PUBLIC_DNS:~
 ssh -i $ssh_key_file $SSH_USER_NAME@$BUILD_SERVER_PUBLIC_DNS "sudo ~/build-server/build-server-provision.sh"
-
-echo "Provisioning the build node01 ..."
-ssh-keyscan -H $BUILD_NODE01_PUBLIC_DNS >> ~/.ssh/known_hosts
-scp -i $ssh_key_file -rp "$scriptdir/build-node-java" $SSH_USER_NAME@$BUILD_NODE01_PUBLIC_DNS:~
-ssh -i $ssh_key_file $SSH_USER_NAME@$BUILD_NODE01_PUBLIC_DNS "sudo ~/build-node-java/build-node-provision.sh"
 
 echo "Jenkins is available at:"
 echo "http://$BUILD_SERVER_PUBLIC_DNS/jenkins"

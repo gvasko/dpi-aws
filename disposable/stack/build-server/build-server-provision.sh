@@ -13,6 +13,9 @@ fi
 
 echo "scriptdir=$scriptdir"
 
+node_variables_file="$scriptdir/node.variables"
+system_profile="/etc/bash.bashrc"
+
 wget -q -O - https://jenkins-ci.org/debian/jenkins-ci.org.key | apt-key add -
 sh -c 'echo deb http://pkg.jenkins-ci.org/debian binary/ > /etc/apt/sources.list.d/jenkins.list'
 apt-get update
@@ -32,9 +35,13 @@ cat /etc/default/jenkins | grep -v JENKINS_ARGS > /etc/default/jenkins.new
 echo $jenkins_args >> /etc/default/jenkins.new
 mv /etc/default/jenkins.new /etc/default/jenkins
 
-apt-get install -y curl
+jenkins_home="/var/lib/jenkins"
+jenkins_init_dir="$jenkins_home/init.groovy.d"
 apt-get install -y unzip
 $scriptdir/jenkins-plugins.sh $scriptdir/jenkins-plugins.txt
-chown -R jenkins:jenkins /var/lib/jenkins/plugins
+chown -R jenkins:jenkins $jenkins_home/plugins
+
+cp $scriptdir/credentials.groovy $jenkins_init_dir/
+cp $node_variables_file $jenkins_init_dir/
 
 service jenkins restart

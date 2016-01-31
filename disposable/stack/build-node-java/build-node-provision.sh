@@ -18,7 +18,7 @@ system_profile="/etc/bash.bashrc"
 
 source $node_variables_file
 
-echo "# Install basic tools"
+echo "# Init and install basic tools"
 add-apt-repository -y ppa:openjdk-r/ppa
 apt-add-repository -y ppa:natecarlson/maven3
 apt-get update
