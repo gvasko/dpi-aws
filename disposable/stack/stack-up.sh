@@ -65,10 +65,14 @@ echo "Exporting variables..."
 echo "AWS_STACK_NAME=$AWS_STACK_NAME" >> $stack_variables_file
 if [ "X$status" = "XCREATE_COMPLETE" ]; then
 	echo "AWS_STACK_ID=$(cat create-stack.response | jq -r '.StackId')" >> $stack_variables_file
+	
+	buildserver_variables_file="buildserver.variables"
 	buildserver_public_dns=`cat describe-stacks.response | jq -r ".Stacks[] | select(.StackName == \"$AWS_STACK_NAME\") | .Outputs[] | select(.OutputKey == \"BuildServerPublicDNS\") | .OutputValue"`
-	echo "BUILD_SERVER_PUBLIC_DNS=$buildserver_public_dns" >> $stack_variables_file
+	echo "AWS_STACK_PUBLIC_DNS=$buildserver_public_dns" >> $buildserver_variables_file
+	
+	buildnode01_variables_file="buildnode01.variables"
 	buildnode01_public_dns=`cat describe-stacks.response | jq -r ".Stacks[] | select(.StackName == \"$AWS_STACK_NAME\") | .Outputs[] | select(.OutputKey == \"BuildNode01PublicDNS\") | .OutputValue"`
-	echo "BUILD_NODE01_PUBLIC_DNS=$buildnode01_public_dns" >> $stack_variables_file
+	echo "AWS_STACK_PUBLIC_DNS=$buildnode01_public_dns" >> $buildnode01_variables_file
 fi
 echo "AWS_STACK_STATUS=$status" >> $stack_variables_file
 

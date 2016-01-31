@@ -11,12 +11,22 @@ fi
 
 source $scriptdir/../../common/common.include
 
-if [ "$#" -ne 0 ]; then
-	echo "Error in arguments. No argument required. All variables are read from the creational state."
+if [ "$#" -ne 1 ]; then
+	echo "Error in arguments. Instance name required."
 	exit 1
 fi
 
+instance_name=$1
+
 source $stack_variables_file
 source $scriptdir/stack.variables
+
+# Load the description of the given instance
+instance_variables_file="$1.variables"
+if [ ! -f "instance_variables_file" ]; then
+	echo "Error: no config was found for the given instance name."
+	exit 1
+fi
+source $instance_variables_file
 
 ssh -i $ssh_key_file $SSH_USER_NAME@$AWS_STACK_PUBLIC_DNS
