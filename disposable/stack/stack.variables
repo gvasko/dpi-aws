@@ -1,2 +1,6 @@
 BUILD_SERVER_MTYPE="m3.medium"
 SSH_USER_NAME="ubuntu"
+
+# INSTANCE NAMES
+BUILDSERVER_NAME="buildserver"
+BUILDNODE01_NAME="buildnode01"

@@ -29,13 +29,15 @@ cp $node_variables_file $scriptdir/build-node-java/
 cp $node_variables_file $scriptdir/build-server/
 
 echo "Provisioning the build node01..."
+echo "${BUILDNODE01_NAME}" > $scriptdir/build-node-java/motd
 ssh-keyscan -H $BUILD_NODE01_PUBLIC_DNS >> ~/.ssh/known_hosts
-scp -i $ssh_key_file -rp "$scriptdir/build-node-java" $SSH_USER_NAME@$BUILD_NODE01_PUBLIC_DNS:~
+scp -i $ssh_key_file -rp $scriptdir/build-node-java $SSH_USER_NAME@$BUILD_NODE01_PUBLIC_DNS:~
 ssh -i $ssh_key_file $SSH_USER_NAME@$BUILD_NODE01_PUBLIC_DNS "sudo ~/build-node-java/build-node-provision.sh"
 
 echo "Provisioning the build server..."
+echo "${BUILDSERVER_NAME}" > $scriptdir/build-node-java/motd
 ssh-keyscan -H $BUILD_SERVER_PUBLIC_DNS >> ~/.ssh/known_hosts
-scp -i $ssh_key_file -rp "$scriptdir/build-server" $SSH_USER_NAME@$BUILD_SERVER_PUBLIC_DNS:~
+scp -i $ssh_key_file -rp $scriptdir/build-server $SSH_USER_NAME@$BUILD_SERVER_PUBLIC_DNS:~
 ssh -i $ssh_key_file $SSH_USER_NAME@$BUILD_SERVER_PUBLIC_DNS "sudo ~/build-server/build-server-provision.sh"
 
 echo "Jenkins is available at:"

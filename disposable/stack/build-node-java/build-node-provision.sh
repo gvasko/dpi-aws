@@ -22,6 +22,11 @@ else
 	node_variables_file="$scriptdir/vagrant-node.variables"
 fi
 
+if [ ! -f "$scriptdir/motd" ]; then
+	echo "instance of build-node-java" > $scriptdir/motd
+fi
+cp $scriptdir/motd /etc/
+
 source $node_variables_file
 
 echo "# Init and install basic tools"
