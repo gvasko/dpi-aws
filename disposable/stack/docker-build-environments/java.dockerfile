@@ -2,7 +2,8 @@ FROM evarga/jenkins-slave
 
 RUN apt-get update && apt-get install -y \ 
 	wget \
-	unzip
+	unzip \
+	git
 
 COPY tmp/gradle-3.3-bin.zip /opt/
 RUN mkdir /opt/gradle &&\
