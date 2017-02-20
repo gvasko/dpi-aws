@@ -12,4 +12,7 @@ RUN mkdir /opt/gradle &&\
 	unzip -d /opt/gradle /opt/gradle-3.3-bin.zip &&\
 	rm /opt/gradle-3.3-bin.zip
 
-COPY java-env.sh /etc/profile.d/
+RUN chsh -s /bin/bash jenkins
+
+COPY java-env.sh /home/jenkins/.bashrc
+
