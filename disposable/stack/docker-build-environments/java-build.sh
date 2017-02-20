@@ -7,5 +7,5 @@ if [ ! -f tmp/$gradle_zip ]; then
 	wget -O tmp/$gradle_zip https://services.gradle.org/distributions/$gradle_zip 
 fi
 
-docker build -f java.dockerfile -t gvasko/buildnode-java:latest .
+docker build -f java.dockerfile -t gvasko/jenkins-java-node:latest .
 

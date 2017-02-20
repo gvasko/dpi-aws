@@ -1,3 +1,3 @@
-docker stop java-node
-docker rm java-node
-docker rmi gvasko/buildnode-java
+docker stop jenkins-java-node-1
+docker rm jenkins-java-node-1
+docker rmi gvasko/jenkins-java-node
