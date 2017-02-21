@@ -11,14 +11,15 @@ echo "scriptdir=$scriptdir"
 
 source $scriptdir/common.include
 
-jenkins_home_dir="jenkins_home"
+jenkins_home_dir=$scriptdir/jenkins_home
 
 mkdir $jenkins_home_dir
 
 uid=$(id -u)
 gid=$(id -g)
 
-docker run -dt -p 80:8080 -v $PWD/$jenkins_home_dir:/var/jenkins_home:z --name jenkins --user $uid:$gid gvasko/jenkins
+docker pull $DOCKER_PRIVATE_REGISTRY/gvasko/jenkins-java-node
+docker run -dt -p 80:8080 -v $scriptdir/$jenkins_home_dir:/var/jenkins_home:z --name jenkins --user $uid:$gid $DOCKER_PRIVATE_REGISTRY/gvasko/jenkins
 
 docker ps
 
