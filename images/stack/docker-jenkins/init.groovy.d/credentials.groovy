@@ -13,6 +13,7 @@ def env = System.getenv()
 //     LOGGER.info('Credentials - JENKINS_HOME environment variable not found')
 //     return
 // }
+LOGGER.info('#DPI: Credentials ...')
 
 try {
 	// def nodePropertiesFilePath = env['JENKINS_HOME'] + '/init.groovy.d/node.variables'
@@ -31,9 +32,9 @@ try {
     def credentials = new UsernamePasswordCredentialsImpl(scope, 'JENKINS_USER_ID', 'Jenkins User for the Attached Nodes', paramUsername, paramPassword)
     def global = Domain.global()
     credentials_store.addCredentials(global, credentials)
-    LOGGER.info('Credentials - successfully created')
+    LOGGER.info('#DPI: Credentials - successfully created')
 }
 catch (Exception e) {
-    LOGGER.warning('Credentials - exception: ' + e.getClass().getName())
-    LOGGER.warning('Credentials - exception: ' + e.getMessage())
+    LOGGER.warning('#DPI: Credentials - exception: ' + e.getClass().getName())
+    LOGGER.warning('#DPI: Credentials - exception: ' + e.getMessage())
 }

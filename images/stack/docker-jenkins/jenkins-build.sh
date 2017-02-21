@@ -11,5 +11,5 @@ echo "scriptdir=$scriptdir"
 
 source $scriptdir/common.include
 
-docker build -f jenkins.dockerfile -t gvasko/jenkins:latest .
+docker build -f jenkins.dockerfile -t gvasko/jenkins:latest $scriptdir
 

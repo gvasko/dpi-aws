@@ -1,0 +1,22 @@
+
+WaitForUrl() {
+	local URL=$1
+	local PING_RETRY_MAX=15
+	local counter=0
+	printf "Waiting for $URL "
+
+	until $(curl --output /dev/null --silent --head --fail $URL); do
+		printf '.'
+		sleep 10
+		counter=$((counter+1))
+		if [ $counter == $PING_RETRY_MAX ]; then 
+			echo "WARNING - $URL could not start? Timeout."
+			break
+		fi
+	done
+
+	if [ $counter != $PING_RETRY_MAX ]; then 
+		echo "OK - $URL started."
+	fi
+}
+
