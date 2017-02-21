@@ -1,3 +1,3 @@
 aws configure
-$(aws ecr get-login --region eu-central-1)
+aws ecr get-login --region eu-central-1
 
