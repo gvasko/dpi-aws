@@ -18,9 +18,9 @@ mkdir -p $jenkins_home_dir
 uid=$(id -u)
 gid=$(id -g)
 
-docker -H localhost:4243 run -dt -p 80:8080 -v $jenkins_home_dir:/var/jenkins_home:z --name jenkins --user $uid:$gid gvasko/jenkins
+docker run -dt -p 80:8080 -v $jenkins_home_dir:/var/jenkins_home:z --name jenkins --user $uid:$gid gvasko/jenkins
 
-docker -H localhost:4243 ps
+docker ps
 
 WaitForUrl http://localhost/login
 

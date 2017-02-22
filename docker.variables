@@ -1,2 +1,4 @@
 
+DOCKER_OPTIONS='-H localhost:4243'
+
 DOCKER_PRIVATE_REGISTRY=221820444680.dkr.ecr.eu-central-1.amazonaws.com
