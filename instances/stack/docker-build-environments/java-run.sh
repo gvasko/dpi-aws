@@ -7,6 +7,10 @@ else
 	scriptdir=`dirname "$PWD/$0"`
 fi
 
+echo
+echo "########## JAVA NODE 1i ##########" 
+echo
+
 echo "scriptdir=$scriptdir"
 
 . $scriptdir/../../../docker.variables

@@ -9,7 +9,7 @@ fi
 
 echo "scriptdir=$scriptdir"
 
-. $scriptdir/../../../docker.variables
+. $scriptdir/../../docker.variables
 
 aws configure
 

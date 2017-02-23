@@ -1,4 +1,8 @@
 import java.util.logging.Logger
+import jenkins.*
+import jenkins.model.*
+import hudson.*
+import hudson.model.*
 import hudson.slaves.*
 import hudson.plugins.sshslaves.*
 
