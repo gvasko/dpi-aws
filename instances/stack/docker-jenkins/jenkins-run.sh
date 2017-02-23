@@ -10,6 +10,7 @@ fi
 echo "scriptdir=$scriptdir"
 
 source $scriptdir/common.include
+source $scriptdir/../../../docker.variables
 
 jenkins_home_dir=$scriptdir/jenkins_home
 
