@@ -10,9 +10,7 @@ Logger LOGGER = Logger.getLogger('jenkins.util.groovy.GroovyHookScript')
 
 LOGGER.info('#DPI: Discover docker containers to attach as build nodes ...')
   
-def jenkinsMaster = Jenkins.getInstance()
-def baseUrl = jenkinsMaster.getRootUrl()
-def dockerServerUrl = baseUrl.replaceFirst('/$', ':4243/v1.24')
+def dockerServerUrl = 'http://172.17.0.1:4243/v1.24'
 println 'docker server: ' + dockerServerUrl
  
 def containersText = new URL(dockerServerUrl + '/containers/json').text
