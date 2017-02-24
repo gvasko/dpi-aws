@@ -30,23 +30,35 @@ try {
 		if (alreadyAdded) {
 			LOGGER.info('#DPI: Build node - already added: ' + nodeName)
 		} else {
-			LOGGER.info('#DPI: Build node - created: ' + nodeName)
+			def nodeIPAddress = it.NetworkSettings.Networks['bridge'].IPAddress
+			def label = nodeName.split('-')[1]
+
+			def jvmOptions = ''
+			def javaPath = ''
+			def prefixStartSlaveCmd = ''
+			def suffixStartSlaveCmd = ''
+			def launchTimeSeconds = 5
+			def maxNumRetries = 3
+			def retryWaitTime = 10
+			
+			def sshLauncher = new SSHLauncher(
+				nodeIPAddress, 22, 'JENKINS_USER_ID', 
+				jvmOptions, javaPath, prefixStartSlaveCmd, suffixStartSlaveCmd,
+				launchTimeSeconds, maxNumRetries, retryWaitTime)
+
+			def slave = new DumbSlave(nodeName, '/home/jenkins', sshLauncher)
+			slave.with {
+				setNodeDescription('automatically discovered')
+				setNumExecutors(1)
+				setMode(Node.Mode.NORMAL)
+				setLabelString(label)
+			}
+
+			jenkinsMaster.addNode(slave)
+
+			LOGGER.info('#DPI: Build node - successfully created')
 		}
 
-		def nodeIPAddress = it.NetworkSettings.Networks['bridge'].IPAddress
-		def label = nodeName.split('-')[1]
-		def sshLauncher = new SSHLauncher(nodeIPAddress, 22, 'JENKINS_USER_ID', '', '', '', '', 5, 3, 10)
-		def slave = new DumbSlave(nodeName, '/home/jenkins', sshLauncher)
-		slave.with {
-			setNodeDescription('automatically discovered')
-			setNumExecutors(1)
-			setMode(Node.Mode.NORMAL)
-			setLabelString(label)
-		}
-
-		jenkinsMaster.addNode(slave)
-
-		LOGGER.info('#DPI: Build node - successfully created')
 	}
 }
 catch(Exception e) {
