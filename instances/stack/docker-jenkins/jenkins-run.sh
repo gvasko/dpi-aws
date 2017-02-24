@@ -30,5 +30,8 @@ docker ps
 
 WaitForUrl http://localhost/login
 
-cat $jenkins_home_dir/secrets/initialAdminPassword
+initialAdminPassword=$jenkins_home_dir/secrets/initialAdminPassword
 
+if [ -f $initialAdminPassword ]; then
+	cat $initialAdminPassword
+fi
