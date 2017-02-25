@@ -1,6 +1,7 @@
 import java.util.*
 import java.util.logging.Logger
 import jenkins.model.*
+import hudson.model.*
 
 Logger LOGGER = Logger.getLogger('jenkins.util.groovy.GroovyHookScript')
 
