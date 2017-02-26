@@ -11,5 +11,5 @@ RUN npm install bower -g
 
 RUN chsh -s /bin/bash jenkins
 
-COPY java-env.sh /home/jenkins/.bashrc
+COPY nodejs-env.sh /home/jenkins/.bashrc
 
