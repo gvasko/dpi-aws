@@ -8,14 +8,14 @@ else
 fi
 
 echo
-echo "########## JAVA NODE 1 ##########" 
+echo "########## NODEJS NODE 1 ##########" 
 echo
 
 echo "scriptdir=$scriptdir"
 
 . $scriptdir/../../../docker.variables
 
-docker pull $DOCKER_PRIVATE_REGISTRY/gvasko/jenkins-java-node
-docker run -dt --name jenkins-java-node-1 $DOCKER_PRIVATE_REGISTRY/gvasko/jenkins-java-node
+docker pull $DOCKER_PRIVATE_REGISTRY/gvasko/jenkins-nodejs-node
+docker run -dt --name jenkins-nodejs-node-1 $DOCKER_PRIVATE_REGISTRY/gvasko/jenkins-nodejs-node
 docker ps
 
