@@ -4,12 +4,10 @@ FROM evarga/jenkins-slave
 
 RUN apt-get update && \
 	apt-get install -y \
-    linux-image-extra-$(uname -r) \
-    linux-image-extra-virtual \
-    apt-transport-https \
-    ca-certificates \
-    curl \
-    software-properties-common
+	apt-transport-https \
+	ca-certificates \
+	curl \
+	software-properties-common
 
 RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - 
 
