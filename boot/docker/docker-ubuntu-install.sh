@@ -37,8 +37,12 @@ apt-get install -y docker-ce
 usermod -a -G docker ubuntu
 
 DOCKER_OPTS='-H tcp://0.0.0.0:4243'
-cat /lib/systemd/system/docker.service | sed "s:^\(ExecStart\)\(.\+\)$:\1\2 $DOCKER_OPTS":
+sed "s%^\(ExecStart\)\(.\+\)$%\1\2 $DOCKER_OPTS%" -i /lib/systemd/system/docker.service
 
-service docker restart
+service docker stop
+systemctl daemon-reload
+service docker start
+
+curl localhost:4243/version
 
 echo "Log out and log back in again to pick up the new docker group permissions."
