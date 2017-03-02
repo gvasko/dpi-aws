@@ -9,5 +9,5 @@ fi
 
 echo "scriptdir=$scriptdir"
 
-docker build -f $scriptdir/dind.dockerfile -t gvasko/jenkins-dind-node:latest $scriptdir
+docker build -f $scriptdir/docker.dockerfile -t gvasko/jenkins-docker-node:latest $scriptdir
 
