@@ -15,10 +15,7 @@ jenkins_home_dir=$scriptdir/jenkins_home
 
 mkdir -p $jenkins_home_dir
 
-uid=$(id -u)
-gid=$(id -g)
-
-docker run -dt -p 80:8080 -v $jenkins_home_dir:/var/jenkins_home:z --name jenkins --user $uid:$gid gvasko/jenkins
+docker run -dt -p 80:8080 -v $jenkins_home_dir:/var/jenkins_home:z --name jenkins gvasko/jenkins
 
 docker ps
 
