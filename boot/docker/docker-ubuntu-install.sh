@@ -13,11 +13,11 @@ echo "scriptdir=$scriptdir"
 
 apt-get update
 
-apt-get install \
+apt-get install -y \
     linux-image-extra-$(uname -r) \
     linux-image-extra-virtual
 
-apt-get install \
+apt-get install -y \
     apt-transport-https \
     ca-certificates \
     curl \
@@ -32,8 +32,13 @@ add-apt-repository \
 
 apt-get update
 
-apt-get install docker-ce
+apt-get install -y docker-ce
 
 usermod -a -G docker ubuntu
+
+DOCKER_OPTS='-H tcp://0.0.0.0:4243'
+cat /lib/systemd/system/docker.service | sed "s:^\(ExecStart\)\(.\+\)$:\1\2 $DOCKER_OPTS":
+
+service docker restart
 
 echo "Log out and log back in again to pick up the new docker group permissions."
