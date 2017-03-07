@@ -23,10 +23,7 @@ apt-get install -y \
     curl \
     software-properties-common
 
-apt-get -y upgrade
-python3 -V
-apt-get install -y python3-pip
-pip3 install --upgrade --user awscli
+apt-get install -y awscli
 
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - 
 
