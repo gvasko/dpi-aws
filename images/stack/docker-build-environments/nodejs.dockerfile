@@ -2,8 +2,10 @@ FROM evarga/jenkins-slave
 
 RUN apt-get update && apt-get -y install \
 	software-properties-common \
-	git \
 	wget \
+	zip \
+	unzip \
+	git \
 	curl
 
 # RUN echo "deb http://dl.google.com/linux/chrome/deb/ stable main" | tee -a /etc/apt/sources.list

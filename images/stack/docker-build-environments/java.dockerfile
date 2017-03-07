@@ -3,6 +3,7 @@ FROM evarga/jenkins-slave
 RUN apt-get update && apt-get -y install software-properties-common
 RUN add-apt-repository -y ppa:openjdk-r/ppa && apt-get update && apt-get install -y \ 
 	wget \
+	zip \
 	unzip \
 	git \
 	openjdk-8-jdk

@@ -21,9 +21,8 @@ apt-get install -y \
     apt-transport-https \
     ca-certificates \
     curl \
-    software-properties-common
-
-apt-get install -y awscli
+    software-properties-common \
+    awscli
 
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - 
 
