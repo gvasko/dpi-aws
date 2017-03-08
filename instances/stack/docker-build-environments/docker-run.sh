@@ -8,7 +8,7 @@ else
 fi
 
 echo
-echo "########## JAVA NODE 1 ##########" 
+echo "########## DOCKER NODE ##########" 
 echo
 
 echo "scriptdir=$scriptdir"
