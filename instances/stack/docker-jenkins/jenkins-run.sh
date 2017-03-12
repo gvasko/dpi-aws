@@ -20,7 +20,6 @@ jenkins_home_dir=$scriptdir/jenkins_home
 
 mkdir -p $jenkins_home_dir
 
-docker pull $DOCKER_PRIVATE_REGISTRY/gvasko/jenkins-java-node
 docker run -dt -p 80:8080 -v $jenkins_home_dir:/var/jenkins_home:z --name jenkins $DOCKER_PRIVATE_REGISTRY/gvasko/jenkins
 
 docker ps

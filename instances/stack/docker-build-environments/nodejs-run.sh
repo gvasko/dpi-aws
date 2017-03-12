@@ -15,7 +15,6 @@ echo "scriptdir=$scriptdir"
 
 . $scriptdir/../../../docker.variables
 
-docker pull $DOCKER_PRIVATE_REGISTRY/gvasko/jenkins-nodejs-node
 docker run -dt --name jenkins-nodejs-node-1 $DOCKER_PRIVATE_REGISTRY/gvasko/jenkins-nodejs-node
 docker ps
 
