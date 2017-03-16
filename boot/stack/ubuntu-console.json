@@ -1,0 +1,90 @@
+{
+    "AWSTemplateFormatVersion" : "2010-09-09",
+
+    "Description" : "Ubuntu Console",
+
+    "Parameters" : {
+        "KeyName": {
+            "Description" : "Name of an existing EC2 KeyPair to enable SSH access to the instance",
+            "Type": "AWS::EC2::KeyPair::KeyName",
+            "ConstraintDescription" : "must be the name of an existing EC2 KeyPair."
+        },
+
+        "InstanceType" : {
+            "Description" : "EC2 instance type",
+            "Type" : "String",
+            "Default" : "m3.medium",
+            "AllowedValues" : [ "m3.medium" ],
+            "ConstraintDescription" : "must be a valid EC2 instance type."
+        }
+
+    },
+
+    "Mappings" : {
+        "AWSInstanceType2Arch" : {
+            "m3.medium"    : { "Arch" : "HVM64"  }
+        },
+
+        "AWSInstanceType2NATArch" : {
+            "m3.medium"    : { "Arch" : "NATHVM64"  }
+        },
+
+        "AWSRegionArch2AMI" : {
+            "eu-central-1"     : {"HVM64" : "ami-3f1bd150"}
+        }
+
+    },
+
+    "Resources" : {
+        "Console" : {
+            "Type" : "AWS::EC2::Instance",
+            "Properties" : {
+            "InstanceType" : { "Ref" : "InstanceType" },
+            "SecurityGroups" : [ { "Ref" : "InstanceSecurityGroup" } ],
+            "KeyName" : { "Ref" : "KeyName" },
+            "ImageId" : { "Fn::FindInMap" : [ "AWSRegionArch2AMI", { "Ref" : "AWS::Region" },
+                { "Fn::FindInMap" : [ "AWSInstanceType2Arch", { "Ref" : "InstanceType" }, "Arch" ] } ] }
+            }
+        },
+
+        "InstanceSecurityGroup" : {
+            "Type" : "AWS::EC2::SecurityGroup",
+            "Properties" : {
+                "GroupDescription" : "Enable SSH access via port 22 and HTTP access via port 80",
+                "SecurityGroupIngress" : [ 
+                    {
+                        "IpProtocol" : "tcp",
+                        "FromPort" : "22",
+                        "ToPort" : "22",
+                        "CidrIp" : "0.0.0.0/0"
+                    } ,
+                    {
+                        "IpProtocol" : "tcp",
+                        "FromPort" : "80",
+                        "ToPort" : "80",
+                        "CidrIp" : "0.0.0.0/0"
+                    } 
+                ]
+            }
+        }
+    },
+
+    "Outputs" : {
+        "InstanceId" : {
+            "Description" : "InstanceId of the Console",
+            "Value" : { "Ref" : "Console" }
+        },
+        "ConsoleAZ" : {
+            "Description" : "Availability Zone of the Console",
+            "Value" : { "Fn::GetAtt" : [ "Console", "AvailabilityZone" ] }
+        },
+        "ConsolePublicDNS" : {
+            "Description" : "Public DNSName of the Console",
+            "Value" : { "Fn::GetAtt" : [ "Console", "PublicDnsName" ] }
+        },
+        "ConsolePublicIP" : {
+            "Description" : "Public IP address of the Console",
+            "Value" : { "Fn::GetAtt" : [ "Console", "PublicIp" ] }
+        }
+    }
+}

@@ -1,0 +1,123 @@
+{
+    "AWSTemplateFormatVersion" : "2010-09-09",
+
+    "Description" : "Amazon Docker Base",
+
+    "Parameters" : {
+        "KeyName": {
+            "Description" : "Name of an existing EC2 KeyPair to enable SSH access to the instance",
+            "Type": "AWS::EC2::KeyPair::KeyName",
+            "ConstraintDescription" : "must be the name of an existing EC2 KeyPair."
+        },
+
+        "InstanceType" : {
+            "Description" : "EC2 instance type",
+            "Type" : "String",
+            "Default" : "m3.medium",
+            "AllowedValues" : [ "m3.medium" ],
+            "ConstraintDescription" : "must be a valid EC2 instance type."
+        },
+
+        "IamUser": {
+            "Description" : "IAM user for login to private docker registry",
+            "Type": "String",
+            "MinLength": "10",
+            "ConstraintDescription" : "cannot be empty."
+        },
+
+        "IamSecret": {
+            "Description" : "Secret of the IAM user",
+            "Type": "String",
+            "MinLength": "10",
+            "ConstraintDescription" : "cannot be empty."
+        },
+
+        "DockerImage": {
+            "Description" : "Docker image to run",
+            "Type": "String",
+            "MinLength": "10",
+            "ConstraintDescription" : "cannot be empty."
+        }
+
+    },
+
+    "Mappings" : {
+        "AWSInstanceType2Arch" : {
+            "m3.medium"    : { "Arch" : "HVM64"  }
+        },
+
+        "AWSInstanceType2NATArch" : {
+            "m3.medium"    : { "Arch" : "NATHVM64"  }
+        },
+
+        "AWSRegionArch2AMI" : {
+            "eu-central-1"     : {"HVM64" : "ami-5be52c34"}
+        }
+
+    },
+
+    "Resources" : {
+        "AmznDckBase" : {
+            "Type" : "AWS::EC2::Instance",
+            "Properties" : {
+            "InstanceType" : { "Ref" : "InstanceType" },
+            "SecurityGroups" : [ { "Ref" : "InstanceSecurityGroup" } ],
+            "KeyName" : { "Ref" : "KeyName" },
+            "ImageId" : { "Fn::FindInMap" : [ "AWSRegionArch2AMI", { "Ref" : "AWS::Region" },
+                { "Fn::FindInMap" : [ "AWSInstanceType2Arch", { "Ref" : "InstanceType" }, "Arch" ] } ] }
+            },
+            "UserData" : { "Fn::Base64" : { "Fn::Join" : ["", [
+                "#!/bin/bash -v\n",
+                "echo '[default]' >> ~/.aws/credentials\n"
+                "echo aws_access_key_id={\"Ref\" : \"IamUser\"} >> ~/.aws/credentials\n"
+                "echo aws_secret_access_key={\"Ref\" : \"IamSecret\"} >> ~/.aws/credentials\n"
+                "echo '[default]' >> ~/.aws/config\n"
+                "echo region=eu-central-1 >> ~/.aws/config\n"
+                "echo output=json >> ~/.aws/config\n"
+                "docker run -dt -p 80:8080 --name app {\"Ref\" : \"DockerImage\"}\n"
+            ]]}}
+        },
+
+        "InstanceSecurityGroup" : {
+            "Type" : "AWS::EC2::SecurityGroup",
+            "Properties" : {
+                "GroupDescription" : "Enable SSH access via port 22 and HTTP access via port 80",
+                "SecurityGroupIngress" : [ 
+                    {
+                        "IpProtocol" : "tcp",
+                        "FromPort" : "22",
+                        "ToPort" : "22",
+                        "CidrIp" : "0.0.0.0/0"
+                    } ,
+                    {
+                        "IpProtocol" : "tcp",
+                        "FromPort" : "80",
+                        "ToPort" : "80",
+                        "CidrIp" : "0.0.0.0/0"
+                    } 
+                ]
+            }
+        }
+    },
+
+    "Outputs" : {
+        "InstanceId" : {
+            "Description" : "InstanceId of the AmznDckBase",
+            "Value" : { "Ref" : "AmznDckBase" }
+        },
+        "AmznDckBaseAZ" : {
+            "Description" : "Availability Zone of the AmznDckBase",
+            "Value" : { "Fn::GetAtt" : [ "AmznDckBase", "AvailabilityZone" ] }
+        },
+        "AmznDckBasePublicDNS" : {
+            "Description" : "Public DNSName of the AmznDckBase",
+            "Value" : { "Fn::GetAtt" : [ "AmznDckBase", "PublicDnsName" ] }
+        },
+        "AmznDckBasePublicIP" : {
+            "Description" : "Public IP address of the AmznDckBase",
+            "Value" : { "Fn::GetAtt" : [ "AmznDckBase", "PublicIp" ] }
+        }
+    }
+}
+
+
