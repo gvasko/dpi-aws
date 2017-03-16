@@ -60,22 +60,26 @@
         "AmznDckBase" : {
             "Type" : "AWS::EC2::Instance",
             "Properties" : {
-            "InstanceType" : { "Ref" : "InstanceType" },
-            "SecurityGroups" : [ { "Ref" : "InstanceSecurityGroup" } ],
-            "KeyName" : { "Ref" : "KeyName" },
-            "ImageId" : { "Fn::FindInMap" : [ "AWSRegionArch2AMI", { "Ref" : "AWS::Region" },
-                { "Fn::FindInMap" : [ "AWSInstanceType2Arch", { "Ref" : "InstanceType" }, "Arch" ] } ] }
-            },
-            "UserData" : { "Fn::Base64" : { "Fn::Join" : ["", [
-                "#!/bin/bash -v\n",
-                "echo '[default]' >> ~/.aws/credentials\n"
-                "echo aws_access_key_id={\"Ref\" : \"IamUser\"} >> ~/.aws/credentials\n"
-                "echo aws_secret_access_key={\"Ref\" : \"IamSecret\"} >> ~/.aws/credentials\n"
-                "echo '[default]' >> ~/.aws/config\n"
-                "echo region=eu-central-1 >> ~/.aws/config\n"
-                "echo output=json >> ~/.aws/config\n"
-                "docker run -dt -p 80:8080 --name app {\"Ref\" : \"DockerImage\"}\n"
-            ]]}}
+                "InstanceType" : { "Ref" : "InstanceType" },
+                "SecurityGroups" : [ { "Ref" : "InstanceSecurityGroup" } ],
+                "KeyName" : { "Ref" : "KeyName" },
+                "ImageId" : { 
+                    "Fn::FindInMap" : [ "AWSRegionArch2AMI", { "Ref" : "AWS::Region" },
+                        { "Fn::FindInMap" : [ "AWSInstanceType2Arch", { "Ref" : "InstanceType" }, "Arch" ] } 
+                    ] 
+                },
+                "UserData" : { "Fn::Base64" : { "Fn::Join" : ["", [
+                    "#!/bin/bash -v\n",
+                    "mkdir ~/.aws\n",
+                    "echo '[default]' >> ~/.aws/credentials\n",
+                    "echo aws_access_key_id=", {"Ref" : "IamUser"}, ">> ~/.aws/credentials\n",
+                    "echo aws_secret_access_key=", {"Ref" : "IamSecret"}, ">> ~/.aws/credentials\n",
+                    "echo '[default]' >> ~/.aws/config\n",
+                    "echo region=eu-central-1 >> ~/.aws/config\n",
+                    "echo output=json >> ~/.aws/config\n",
+                    "docker run -dt -p 80:8080 --name app ", {"Ref" : "DockerImage"}, "\n"
+                ]]}}
+            }
         },
 
         "InstanceSecurityGroup" : {
