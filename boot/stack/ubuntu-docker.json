@@ -1,7 +1,7 @@
 {
     "AWSTemplateFormatVersion" : "2010-09-09",
 
-    "Description" : "Amazon Docker Base",
+    "Description" : "@APP_DESCRIPTION@",
 
     "Parameters" : {
         "KeyName": {
@@ -60,7 +60,7 @@
     },
 
     "Resources" : {
-        "AmznDckBase" : {
+        "DockerHost" : {
             "Type" : "AWS::EC2::Instance",
             "Properties" : {
                 "InstanceType" : { "Ref" : "InstanceType" },
@@ -74,8 +74,13 @@
                 "UserData" : { "Fn::Base64" : { "Fn::Join" : ["", [
                     "#!/bin/bash -v\n",
                     "apt-get update\n",
+                    "apt-get -y install curl python-setuptools\n",
+                    "mkdir aws-cfn-bootstrap-latest\n",
+                    "curl https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.tar.gz | tar xz -C aws-cfn-bootstrap-latest --strip-components 1\n",
+                    "easy_install aws-cfn-bootstrap-latest\n",
+                    "pip install https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.tar.gz\n",
                     "apt-get install -y linux-image-extra-$(uname -r) linux-image-extra-virtual\n",
-                    "apt-get install -y apt-transport-https ca-certificates curl software-properties-common awscli jq\n",
+                    "apt-get install -y apt-transport-https ca-certificates software-properties-common awscli jq\n",
                     "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -\n",
                     "add-apt-repository \"deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable\"\n",
                     "apt-get update\n",
@@ -97,8 +102,14 @@
                     "echo docker_registry=$docker_registry >> /home/ubuntu/vars\n",
                     "chown ubuntu:ubuntu /home/ubuntu/vars\n",
                     "su -l ubuntu -c \"docker login -u AWS -p $token -e none $docker_registry && docker run -dt -p 80:8080 --name app $docker_image\"\n",
+                    "/usr/local/bin/cfn-signal -e $? --stack ", { "Ref" : "AWS::StackName" }, " --resource DockerHost --region eu-central-1\n"
                 ]]}}
-            }
+            },
+            "CreationPolicy" : {
+                "ResourceSignal" : {
+                    "Timeout" : "PT10M"
+                }
+            }  
         },
 
         "InstanceSecurityGroup" : {
@@ -125,20 +136,20 @@
 
     "Outputs" : {
         "InstanceId" : {
-            "Description" : "InstanceId of the AmznDckBase",
-            "Value" : { "Ref" : "AmznDckBase" }
+            "Description" : "InstanceId of the DockerHost",
+            "Value" : { "Ref" : "DockerHost" }
         },
         "AmznDckBaseAZ" : {
-            "Description" : "Availability Zone of the AmznDckBase",
-            "Value" : { "Fn::GetAtt" : [ "AmznDckBase", "AvailabilityZone" ] }
+            "Description" : "Availability Zone of the DockerHost",
+            "Value" : { "Fn::GetAtt" : [ "DockerHost", "AvailabilityZone" ] }
         },
         "AmznDckBasePublicDNS" : {
-            "Description" : "Public DNSName of the AmznDckBase",
-            "Value" : { "Fn::GetAtt" : [ "AmznDckBase", "PublicDnsName" ] }
+            "Description" : "Public DNSName of the DockerHost",
+            "Value" : { "Fn::GetAtt" : [ "DockerHost", "PublicDnsName" ] }
         },
         "AmznDckBasePublicIP" : {
-            "Description" : "Public IP address of the AmznDckBase",
-            "Value" : { "Fn::GetAtt" : [ "AmznDckBase", "PublicIp" ] }
+            "Description" : "Public IP address of the DockerHost",
+            "Value" : { "Fn::GetAtt" : [ "DockerHost", "PublicIp" ] }
         }
     }
 }
