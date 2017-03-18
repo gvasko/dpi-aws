@@ -21,6 +21,7 @@
         "IamUser": {
             "Description" : "IAM user for login to private docker registry",
             "Type": "String",
+            "Default" : "@IAM_USER@",
             "MinLength": "10",
             "ConstraintDescription" : "cannot be empty."
         },
@@ -28,6 +29,7 @@
         "IamSecret": {
             "Description" : "Secret of the IAM user",
             "Type": "String",
+            "Default" : "@IAM_SECRET@",
             "MinLength": "10",
             "ConstraintDescription" : "cannot be empty."
         },
@@ -35,6 +37,7 @@
         "DockerImage": {
             "Description" : "Docker image to run",
             "Type": "String",
+            "Default" : "@DOCKER_IMAGE@",
             "MinLength": "10",
             "ConstraintDescription" : "cannot be empty."
         }
@@ -51,7 +54,7 @@
         },
 
         "AWSRegionArch2AMI" : {
-            "eu-central-1"     : {"HVM64" : "ami-5be52c34"}
+            "eu-central-1"     : {"HVM64" : "ami-3f1bd150"}
         }
 
     },
@@ -70,14 +73,30 @@
                 },
                 "UserData" : { "Fn::Base64" : { "Fn::Join" : ["", [
                     "#!/bin/bash -v\n",
-                    "mkdir ~/.aws\n",
-                    "echo '[default]' >> ~/.aws/credentials\n",
-                    "echo aws_access_key_id=", {"Ref" : "IamUser"}, ">> ~/.aws/credentials\n",
-                    "echo aws_secret_access_key=", {"Ref" : "IamSecret"}, ">> ~/.aws/credentials\n",
-                    "echo '[default]' >> ~/.aws/config\n",
-                    "echo region=eu-central-1 >> ~/.aws/config\n",
-                    "echo output=json >> ~/.aws/config\n",
-                    "docker run -dt -p 80:8080 --name app ", {"Ref" : "DockerImage"}, "\n"
+                    "apt-get update\n",
+                    "apt-get install -y linux-image-extra-$(uname -r) linux-image-extra-virtual\n",
+                    "apt-get install -y apt-transport-https ca-certificates curl software-properties-common awscli jq\n",
+                    "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -\n",
+                    "add-apt-repository \"deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable\"\n",
+                    "apt-get update\n",
+                    "apt-get install -y docker-ce\n",
+                    "usermod -a -G docker ubuntu\n",
+                    "sudo -u ubuntu mkdir /home/ubuntu/.aws\n",
+                    "echo '[default]' >> /home/ubuntu/.aws/credentials\n",
+                    "echo aws_access_key_id=", {"Ref" : "IamUser"}, " >> /home/ubuntu/.aws/credentials\n",
+                    "echo aws_secret_access_key=", {"Ref" : "IamSecret"}, " >> /home/ubuntu/.aws/credentials\n",
+                    "echo '[default]' >> /home/ubuntu/.aws/config\n",
+                    "echo region=eu-central-1 >> /home/ubuntu/.aws/config\n",
+                    "echo output=json >> /home/ubuntu/.aws/config\n",
+                    "chown ubuntu:ubuntu /home/ubuntu/.aws /home/ubuntu/.aws/*\n",
+                    "export docker_image='", {"Ref" : "DockerImage"}, "'\n",
+                    "export token=$(su -l ubuntu -c 'aws ecr get-authorization-token --output text --query authorizationData[].authorizationToken' | base64 -d | cut -d: -f2)\n",
+                    "export docker_registry=$(echo $docker_image | cut -d/ -f1)\n",
+                    "echo docker_image=$docker_image >> /home/ubuntu/vars\n",
+                    "echo token=$token >> /home/ubuntu/vars\n",
+                    "echo docker_registry=$docker_registry >> /home/ubuntu/vars\n",
+                    "chown ubuntu:ubuntu /home/ubuntu/vars\n",
+                    "su -l ubuntu -c \"docker login -u AWS -p $token -e none $docker_registry && docker run -dt -p 80:8080 --name app $docker_image\"\n",
                 ]]}}
             }
         },
