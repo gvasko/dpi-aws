@@ -21,7 +21,7 @@ aws_secret_access_key=$(cat ~/.aws/credentials | grep 'aws_secret_access_key' | 
 docker run -dt -e "AWS_ACCESS_KEY_ID=$aws_access_key_id" -e "AWS_SECRET_ACCESS_KEY=$aws_secret_access_key" -e "AWS_DEFAULT_REGION=eu-central-1" --name jenkins-docker-node-1 $DOCKER_PRIVATE_REGISTRY/gvasko/jenkins-docker-node
 
 docker exec -u jenkins jenkins-docker-node-1 '/home/jenkins/docker-aws.sh'
-docker exec -u jenkins jenkins-docker-node-1 'docker login -u AWS -p $(aws ecr get-authorization-token --output text --query authorizationData[].authorizationToken | base64 -d | cut -d: -f2) -e none 221820444680.dkr.ecr.eu-central-1.amazonaws.com'
+docker exec jenkins-docker-node-1 su -l jenkins -c "docker login -u AWS -p $(aws ecr get-authorization-token --output text --query authorizationData[].authorizationToken | base64 -d | cut -d: -f2) -e none 221820444680.dkr.ecr.eu-central-1.amazonaws.com"
 
 docker ps
 
