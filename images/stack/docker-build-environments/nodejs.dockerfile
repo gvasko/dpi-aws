@@ -5,6 +5,7 @@ RUN apt-get update && apt-get -y install \
 	wget \
 	zip \
 	unzip \
+	bzip2 \
 	git \
 	curl
 
