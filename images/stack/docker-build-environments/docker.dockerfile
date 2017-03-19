@@ -8,7 +8,8 @@ RUN apt-get update && \
 	ca-certificates \
 	curl \
 	software-properties-common \
-	jq
+	jq \
+	awscli
 
 RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - 
 
@@ -16,7 +17,7 @@ RUN add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubunt
 	apt-get update && \
 	apt-get install -y docker-ce
 
-RUN usermod -a -G docker jenkins && \
+RUN usermod -a -G docker jenkins
 
 COPY docker-env.sh /home/jenkins/.bashrc
 

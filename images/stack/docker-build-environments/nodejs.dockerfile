@@ -8,7 +8,7 @@ RUN apt-get update && apt-get -y install \
 	git \
 	curl
 
-RUN curl --silent --location https://deb.nodesource.com/setup_6.x | sudo -E bash -
+RUN curl --silent --location https://deb.nodesource.com/setup_6.x | bash
 RUN apt-get install -y nodejs
 RUN npm install bower -g
 RUN npm install protractor -g
