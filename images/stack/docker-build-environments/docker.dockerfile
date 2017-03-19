@@ -21,3 +21,5 @@ RUN usermod -a -G docker jenkins
 
 COPY docker-env.sh /home/jenkins/.bashrc
 
+COPY docker-aws.sh /home/jenkins/
+
