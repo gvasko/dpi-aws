@@ -1,4 +1,4 @@
-FROM evarga/jenkins-slave
+FROM 221820444680.dkr.ecr.eu-central-1.amazonaws.com/gvasko/jenkins-slave
 
 # source: https://docs.docker.com/engine/installation/linux/ubuntu/#install-using-the-repository
 
@@ -17,7 +17,6 @@ RUN add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubunt
 	apt-get install -y docker-ce
 
 RUN usermod -a -G docker jenkins && \
-chsh -s /bin/bash jenkins
 
 COPY docker-env.sh /home/jenkins/.bashrc
 
