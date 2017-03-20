@@ -18,6 +18,8 @@ try {
 	            
 	jenkinsMaster.setJDKs(jdkList)
 
+	jenkinsMaster.setMarkupFormatter(new hudson.markup.RawHtmlMarkupFormatter(false))
+	
 	LOGGER.info('#DPI: Master config - successfully done')
 }
 catch (Exception e) {
