@@ -24,6 +24,7 @@ git:latest
 git-server:latest
 gradle:latest
 handlebars:latest
+htmlpublisher:latest
 icon-shim:latest
 jquery-detached:latest
 junit:latest
